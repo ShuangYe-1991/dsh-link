@@ -1,0 +1,5 @@
+# dsh-link 的加载声明：装一次，电脑端能力全在这一个插件里。
+# 端口、密码、开关都存在 $DSH_HOME/dsh-link/state.json，改配置不需要重装。
+- insert:
+    - id: dsh-link
+      name: dsh-link

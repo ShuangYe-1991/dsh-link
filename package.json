@@ -1,0 +1,58 @@
+{
+  "name": "dsh-link",
+  "version": "0.6.4",
+  "description": "一台电脑 + 一台手机，把 DSH 连起来用：电脑端开带密码的局域网/公网入口，手机端在面板里直接操作电脑上的 DSH。",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib/",
+    "vendor/",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "remote",
+    "mobile",
+    "tunnel",
+    "reverse-proxy"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  },
+  "author": "ShuangYe-1991",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShuangYe-1991/dsh-link.git"
+  },
+  "homepage": "https://github.com/ShuangYe-1991/dsh-link#readme",
+  "bugs": {
+    "url": "https://github.com/ShuangYe-1991/dsh-link/issues"
+  }
+}

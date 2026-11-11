@@ -1,0 +1,16 @@
+本目录下的第三方文件
+
+1) qrcode.cjs
+   qrcode-generator
+   Copyright (c) 2009 Kazuhiko Arase
+   Licensed under the MIT License
+   https://github.com/kazuhikoarase/qrcode-generator
+
+2) jsqr.js
+   jsQR
+   Copyright (c) 2016 Cosmo Wolfe
+   Licensed under the Apache License, Version 2.0
+   https://github.com/cozmo/jsQR
+   许可证全文：https://www.apache.org/licenses/LICENSE-2.0
+
+以上文件未做修改（jsqr.js 为官方发布版本的打包产物）。
