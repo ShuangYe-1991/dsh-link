@@ -134,6 +134,27 @@ dsh plugin --profile web add /sdcard/Download/dsh-link-0.6.2.tgz
 6. **关闭「局域网访问」后，电脑本机的管理页也会被 403 挡住**（把自己锁在外面），需要用 state.json 手动改回。**这个开关暂时不要用。**
 7. **连接失败后在设置页出现的红框，更新网址成功后仍然挂着**，容易误导；下一版要挪到"进入面板失败"那一页里，并和扫码/相册识别放在一起。
 8. 已连电脑那行按钮有 5~6 个、挤在一行；下一版改成两行（上行名字+状态，下行等宽按钮）。
+## 鸣谢
+
+这个项目的**灵感与协议设计**来自 [dsh-pocket](https://github.com/shaobeichen/dsh-pocket)（作者 [@shaobeichen](https://github.com/shaobeichen)）。
+
+它最早做出了"手机扫码就能用电脑上的 DSH"这件事，也是本插件的起点：先有了 dsh-pocket 的能力边界、它的登录门与反向代理思路，才有后面的协议约定（`/__link/version`、`/__link/login`、WebSocket 透传）。本项目的手机端面板交互（悬浮胶囊 + 切换抽屉 + 多台电脑）同样是沿着它那套探索走过来的。
+
+需要说明：**本项目不复用 dsh-pocket 的代码**（它是 GPL-2.0，本项目是 MIT），只按它的对外行为实现客户端；两者协议不兼容时，各以各自文档为准。
+
+另外用到的开源组件与外部服务：
+
+- [Cloudflare cloudflared](https://github.com/cloudflare/cloudflared) —— 公网隧道（免费快速隧道 / 命名隧道）
+- [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator)（MIT）—— 生成二维码
+- [jsQR](https://github.com/cozmo/jsQR)（Apache-2.0）—— 解码二维码图片
+
+以及所有愿意试用、反馈问题的人。
+
+## 联系
+
+- GitHub：[@ShuangYe-1991](https://github.com/ShuangYe-1991)
+- 问题与建议：直接在这个仓库开 [Issue](https://github.com/ShuangYe-1991/dsh-link/issues)，比私信更容易被看见
+
 ## 许可
 
 MIT。二维码生成用 [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator)（MIT）；扫码解码用 [jsQR](https://github.com/cozmo/jsQR)（Apache-2.0）。
