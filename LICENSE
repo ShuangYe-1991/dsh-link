@@ -19,24 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-## 随包携带的第三方代码
-
-本项目的全部源码都在仓库里（ESM 明文 .js/.mjs，无压缩、无编译产物），
-以下两个库是"直接放进来"的第三方文件，各自遵循自己的许可证：
-
-1. `vendor/qrcode.cjs`
-   - qrcode-generator — Copyright (c) 2009 Kazuhiko Arase
-   - MIT License — https://github.com/kazuhikoarase/qrcode-generator
-
-2. `vendor/jsqr.js`
-   - jsQR — Copyright (c) 2016 Cosmo Wolfe
-   - Apache License 2.0 — https://github.com/cozmo/jsQR
-   - 该文件保留原始许可头；Apache-2.0 允许再分发，但需保留版权与许可声明。
-
-## 不随包携带的东西
-
-- 用户数据（`$DSH_HOME/dsh-link/` 下的 state.json、tunnel.json、日志）不进入仓库与安装包；
-- `cloudflared` 二进制由使用者的机器自行下载（Cloudflare 发布，遵循其自身许可）。
