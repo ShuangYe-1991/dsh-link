@@ -744,6 +744,19 @@ window.__ModuleLoader__.load({
           h('p', { style: css.muted }, subtitle),
         )
 
+      // 鸣谢 + 联系方式（设置页里两个角色都显示）
+      const thanksBlock = h(
+        'div',
+        { style: { marginTop: 18, paddingTop: 12, borderTop: '1px solid rgba(127,127,127,.25)', fontSize: 12, lineHeight: 1.7, opacity: 0.85 } },
+        h('div', { style: { fontWeight: 600, marginBottom: 4 } }, '鸣谢'),
+        h(
+          'div',
+          null,
+          '灵感与协议参考 dsh-pocket（@shaobeichen，本项目不复用其代码）；公网隧道 cloudflared；二维码 qrcode-generator (MIT)；解码 jsQR (Apache-2.0)。',
+        ),
+        h('div', { style: { marginTop: 4 } }, '作者 GitHub：@ShuangYe-1991　·　问题与建议：到仓库开 Issue 最快被看到'),
+      )
+
       if (role === 'computer') {
         return h(
           'div',
@@ -755,7 +768,7 @@ window.__ModuleLoader__.load({
             title: '手机访问控制页',
             style: { width: '100%', height: 620, border: 0, borderRadius: 10, marginTop: 6, background: 'transparent' },
           }),
-          note ? h('p', { style: css.err }, note) : null,
+            note ? h('p', { style: css.err }, note) : null,
         )
       }
 
@@ -773,6 +786,7 @@ window.__ModuleLoader__.load({
         { style: { padding: '4px 2px', fontSize: 13 } },
         header('连上别的电脑上的 DSH：手机这边通过本机代理去连，登录态和地址都在代理里管。'),
         roleRow,
+        thanksBlock,
 
         h(
           'div',
@@ -794,66 +808,64 @@ window.__ModuleLoader__.load({
           : state.connections.map((row) =>
               h(
                 'div',
-                { key: row.id, style: css.row },
+                { key: row.id, style: { padding: '10px 2px', borderBottom: '1px solid rgba(127,127,127,.2)' } },
+                // 第一行：名字 + 连接状态 + 地址
                 h(
                   'div',
-                  { style: css.rowMain },
-                  h('div', { style: css.label }, row.label || '未命名电脑', row.id === state.activeId ? h('span', { style: { color: '#2e9e5b', marginLeft: 6, fontSize: 11.5 } }, '正在用') : null),
-                  h('div', { style: css.url }, row.url),
+                  { style: { display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 } },
+                  h(
+                    'div',
+                    { style: { fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: '0 1 auto' } },
+                    row.label || '未命名电脑',
+                  ),
+                  row.id === state.activeId
+                    ? h('span', { style: { color: '#2e9e5b', fontSize: 11.5, flex: '0 0 auto' } }, '正在用')
+                    : h('span', { style: { fontSize: 11.5, opacity: 0.5, flex: '0 0 auto' } }, '未连接'),
+                  h(
+                    'span',
+                    { style: { fontSize: 11, opacity: 0.5, marginLeft: 'auto', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '50%' } },
+                    row.url,
+                  ),
                 ),
-                h('button', { style: css.small, onClick: () => run('open', () => openComputer(row.id)) }, '进入面板'),
+                // 第二行：按钮统一大小、等宽一排
                 h(
-                  'button',
-                  {
-                    style: css.small,
-                    onClick: () =>
-                      run('rename', async () => {
+                  'div',
+                  { style: { display: 'flex', gap: 6, marginTop: 8 } },
+                  [
+                    { label: '进入', fn: () => run('open', () => openComputer(row.id)) },
+                    { label: '改名', fn: () => run('rename', async () => {
                         const next = window.prompt('新的名字', row.label ?? '')
                         if (next === null) return
                         await post('/__ctl/rename', { id: row.id, label: next.trim() })
                         await loadState()
-                      }),
-                  },
-                  '改名',
-                ),
-                h(
-                  'button',
-                  {
-                    style: css.small,
-                    onClick: () => {
-                      store.set({ form: { label: row.label || '', url: row.url, pin: '' }, editingId: row.id })
-                      setNote('改网址：密码留空就沿用旧的')
-                    },
-                  },
-                  '改网址',
-                ),
-                h(
-                  'button',
-                  {
-                    style: css.small,
-                    onClick: () =>
-                      run('pin', async () => {
+                      }) },
+                    { label: '改网址', fn: () => {
+                        store.set({ form: { label: row.label || '', url: row.url, pin: '' }, editingId: row.id })
+                        setNote('改网址：密码留空就沿用旧的')
+                      } },
+                    { label: '改密码', fn: () => run('pin', async () => {
                         const next = window.prompt('这台电脑的新访问密码（电脑上 dsh-link 页面显示的那个）', '')
                         if (next === null) return
                         const pin = next.trim()
                         if (!pin) return
                         await post('/__ctl/pin', { id: row.id, pin })
                         await loadState()
-                      }),
-                  },
-                  '改密码',
-                ),
-                h(
-                  'button',
-                  {
-                    style: css.small,
-                    onClick: () =>
-                      run('delete', async () => {
+                      }) },
+                    { label: '删除', fn: () => run('delete', async () => {
                         await post('/__ctl/delete', { id: row.id })
                         await loadState()
-                      }),
-                  },
-                  '删除',
+                      }) },
+                  ].map((item) =>
+                    h(
+                      'button',
+                      {
+                        key: item.label,
+                        style: { ...css.small, flex: '1 1 0', textAlign: 'center', padding: '7px 0' },
+                        onClick: item.fn,
+                      },
+                      item.label,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -906,48 +918,16 @@ window.__ModuleLoader__.load({
         h('p', { style: css.muted }, '电脑重启后公网地址会变。手机和电脑在同一个 WiFi 时点「自动找新地址」，它会去局域网问一次，问到就自己换上。'),
         state.lastError
           ? h(
-              'div',
-              { style: { border: '1px solid rgba(192,57,43,.45)', borderRadius: 10, padding: '10px 12px', marginTop: 10 } },
-              h(
-                'p',
-                { style: { ...css.err, margin: '0 0 8px', fontWeight: 600 } },
-                state.lastError.kind === 'dns'
-                  ? '网址域名可能已更新，请更新网址域名'
-                  : '连不上这台电脑，可能是网址变了或密码改过',
-              ),
-              h('input', {
-                style: css.input,
-                placeholder: '新的电脑地址（电脑上 dsh-link 页面显示的那个）',
-                value: state.form.url,
-                onChange: (e) => store.set({ form: { ...state.form, url: e.target.value } }),
-              }),
-              h('input', {
-                style: css.input,
-                type: 'password',
-                placeholder: '密码（不填就用旧的）',
-                value: state.form.pin,
-                onChange: (e) => store.set({ form: { ...state.form, pin: e.target.value } }),
-              }),
-              h(
-                'button',
-                {
-                  style: { ...css.small, marginTop: 8 },
-                  onClick: () =>
-                    run('fixurl', async () => {
-                      const id = state.activeId || (state.connections[0] && state.connections[0].id)
-                      if (!id) throw new Error('还没有连过电脑')
-                      if (!state.form.url) throw new Error('先填新地址')
-                      await post('/__ctl/update', { id, url: state.form.url, pin: state.form.pin })
-                      await loadState()
-                      setNote('已更新，试着重连')
-                    }),
-                },
-                busy === 'fixurl' ? '正在更新…' : '更新并重连',
-              ),
+              'p',
+              { style: css.muted },
+              state.lastError.kind === 'dns'
+                ? '上次没连上：网址可能变了。点那台电脑的「进入」，失败页里能直接扫码/填新地址。'
+                : '上次没连上：点那台电脑的「进入」，失败页里能改地址和密码。',
             )
           : null,
         state.error ? h('p', { style: css.err }, state.error) : null,
         note ? h('p', { style: css.err }, note) : null,
+        thanksBlock,
       )
     }
 
